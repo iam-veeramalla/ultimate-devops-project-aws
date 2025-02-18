@@ -1,39 +1,26 @@
+# Configure the AWS Provider
 provider "aws" {
-  region = "us-west-2"
+  region  = "us-west-2"
 }
 
-resource "aws_s3_bucket" "terraform_state" {
-  bucket = "demo-terraform-eks-state-s3-bucket"
+
+resource  "aws_s3_bucket" "example" {
+  bucket = "demo-terraform-eks-state-sai-bucket"
 
   lifecycle {
     prevent_destroy = false
   }
 }
 
-resource "aws_s3_bucket_versioning" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_state.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_state.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
-resource "aws_dynamodb_table" "terraform_locks" {
-  name         = "terraform-eks-state-locks"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockID"
-
+resource "aws_dynamodb_table" "basic-dynamodb-table" {
+  name           = "terraform-eks-state-sai-locks"
+  billing_mode   = "PAY_PER_REQUEST"
+  hash_key       = "LOCKID"
+ 
   attribute {
-    name = "LockID"
+    name = "UserId"
     type = "S"
   }
 }
+
+
